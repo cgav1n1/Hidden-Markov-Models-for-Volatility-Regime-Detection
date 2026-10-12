@@ -15,14 +15,14 @@ from scipy.stats import norm
 # CONFIGURATION
 # ============================================================
 
-STOCK_UNIVERSE = "^GSPC"
+stock_universe = "^GSPC"
 
-START_DATE = "2005-01-01"
-END_DATE = "2026-01-01"  # Exclusive in yfinance
-TRAIN_END_DATE = "2019-12-31"
+start_date = "2005-01-01"
+end_date = "2026-01-01"  # Exclusive in yfinance
+train_end_date = "2019-12-31"
 
-PROJECT_DIR = Path(__file__).resolve().parent.parent
-RESULTS_DIR = PROJECT_DIR / "results"
+project_dir = Path(__file__).resolve().parent.parent
+results_dir = project_dir / "results"
 
 
 # ============================================================
@@ -36,9 +36,9 @@ def initiate_universe():
     """
 
     df = yf.download(
-        STOCK_UNIVERSE,
-        start=START_DATE,
-        end=END_DATE,
+        stock_universe,
+        start=start_date,
+        end=end_date,
         auto_adjust=True,
         progress=False
     )
@@ -71,10 +71,10 @@ def prepare_data(df):
     Testing:  2020-2025
     """
 
-    train_df = df.loc[:TRAIN_END_DATE].copy()
+    train_df = df.loc[:train_end_date].copy()
 
     test_df = df.loc[
-        df.index > pd.Timestamp(TRAIN_END_DATE)
+        df.index > pd.Timestamp(train_end_date)
     ].copy()
 
     X_train = train_df["Log Return"].to_numpy()
@@ -202,9 +202,9 @@ def run_gaussian_benchmark(df=None):
     # Save results
     # --------------------------------------------------------
 
-    RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+    results_dir.mkdir(parents=True, exist_ok=True)
 
-    output_path = RESULTS_DIR / "gaussian_benchmark.csv"
+    output_path = results_dir / "gaussian_benchmark.csv"
 
     pd.DataFrame([metrics]).to_csv(
         output_path,
