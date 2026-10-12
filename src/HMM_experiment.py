@@ -265,7 +265,6 @@ def update_model_comparison(metrics):
     new_results = pd.Series({
         "Train Log-Likelihood": metrics["train_loglik"],
         "Train BIC": metrics["bic"],
-        "Train AIC": metrics["aic"],
         "Test Log-Likelihood": metrics["test_loglik"],
         "Test Log-Likelihood per Observation": (
             metrics["test_loglik_per_obs"]
@@ -366,7 +365,6 @@ def run_model(n_components, df=None, random_state=RANDOM_STATE):
     train_loglik = model.score(X_train)
 
     bic = model.bic(X_train)
-    aic = model.aic(X_train)
 
     if len(X_test) > 0:
         test_loglik = model.score(X_test)
@@ -379,7 +377,6 @@ def run_model(n_components, df=None, random_state=RANDOM_STATE):
         "n_components": n_components,
         "train_loglik": train_loglik,
         "bic": bic,
-        "aic": aic,
         "test_loglik": test_loglik,
         "test_loglik_per_obs": test_loglik_per_obs,
         "converged": model.monitor_.converged,
