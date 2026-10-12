@@ -13,19 +13,19 @@ from hmmlearn.hmm import GaussianHMM
 # CONFIGURATION
 # ============================================================
 
-STOCK_UNIVERSE = "^GSPC"
+stock_universe = "^GSPC"
 
-START_DATE = "2005-01-01"
-END_DATE = "2026-01-01"  # yfinance: end date is exclusive
-TRAIN_END_DATE = "2019-12-31"
+start_date = "2005-01-01"
+end_date = "2026-01-01"  # yfinance: end date is exclusive
+train_end_date = "2019-12-31"
 
-RANDOM_STATE = 42
-N_ITER = 1000
-TOL = 1e-4
+random_state = 42
+n_iter = 1000
+tol = 1e-4
 
 # Results are saved relative to the project root.
-PROJECT_DIR = Path(__file__).resolve().parent.parent
-RESULTS_DIR = PROJECT_DIR / "results"
+project_dir = Path(__file__).resolve().parent.parent
+results_dir = project_dir / "results"
 
 
 # ============================================================
@@ -39,9 +39,9 @@ def initiate_universe():
     """
 
     df = yf.download(
-        STOCK_UNIVERSE,
-        start=START_DATE,
-        end=END_DATE,
+        stock_universe,
+        start=start_date,
+        end=end_date,
         auto_adjust=True,
         progress=False
     )
@@ -76,11 +76,11 @@ def prepare_data(df):
     - Testing: after December 2019
     """
 
-    train_df = df.loc[:TRAIN_END_DATE].copy()
-    test_df = df.loc[TRAIN_END_DATE:].copy()
+    train_df = df.loc[:train_end_date].copy()
+    test_df = df.loc[train_end_date:].copy()
 
     # Avoid including the training boundary in the test set.
-    test_df = test_df.loc[test_df.index > pd.Timestamp(TRAIN_END_DATE)]
+    test_df = test_df.loc[test_df.index > pd.Timestamp(train_end_date)]
 
     X_train = train_df["Log Return"].to_numpy().reshape(-1, 1)
     X_test = test_df["Log Return"].to_numpy().reshape(-1, 1)
@@ -255,9 +255,9 @@ def update_model_comparison(metrics):
     Running the same n_components again updates its column.
     """
 
-    RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+    results_dir.mkdir(parents=True, exist_ok=True)
 
-    comparison_path = RESULTS_DIR / "model_comparison.csv"
+    comparison_path = results_dir / "model_comparison.csv"
 
     n_components = metrics["n_components"]
     column_name = f"{n_components} states"
@@ -302,7 +302,7 @@ def update_model_comparison(metrics):
 # 6. MAIN EXPERIMENT
 # ============================================================
 
-def run_model(n_components, df=None, random_state=RANDOM_STATE):
+def run_model(n_components, df=None, random_state=random_state):
     """
     Train a Gaussian HMM and save experiment results.
 
@@ -351,8 +351,8 @@ def run_model(n_components, df=None, random_state=RANDOM_STATE):
     model = GaussianHMM(
         n_components=n_components,
         covariance_type="diag",
-        n_iter=N_ITER,
-        tol=TOL,
+        n_iter=n_iter,
+        tol=tol,
         random_state=random_state
     )
 
@@ -399,7 +399,7 @@ def run_model(n_components, df=None, random_state=RANDOM_STATE):
     # --------------------------------------------------------
 
     model_dir = (
-        RESULTS_DIR / f"model_{n_components}_states"
+        results_dir / f"model_{n_components}_states"
     )
 
     model_dir.mkdir(
@@ -449,7 +449,6 @@ def run_model(n_components, df=None, random_state=RANDOM_STATE):
     print(f"Iterations:          {metrics['iterations']}")
     print(f"Train Log-Likelihood: {train_loglik:.2f}")
     print(f"BIC:                 {bic:.2f}")
-    print(f"AIC:                 {aic:.2f}")
 
     if len(X_test) > 0:
         print(
