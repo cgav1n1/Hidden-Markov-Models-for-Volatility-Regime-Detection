@@ -1,0 +1,2 @@
+Model,Mean (%),Variance,Volatility (%),Train Observations,Test Observations,Train Log-Likelihood,Train Log-Likelihood per Observation,Train AIC,Train BIC,Test Log-Likelihood,Test Log-Likelihood per Observation
+Gaussian i.i.d.,0.02619687997182474,1.3462032559780779,1.1602599949916734,3774,1508,-5916.056909107254,-1.5675826468222718,11836.113818214508,11848.585599666365,-2588.2255057329585,-1.7163299109635004
